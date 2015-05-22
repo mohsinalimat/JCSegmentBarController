@@ -14,16 +14,29 @@
 
 @implementation JCViewController
 
+static NSString * const reuseIdentifier = @"cellId";
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    
+    
+    
 }
 
-- (void)didReceiveMemoryWarning
+#pragma mark - UITableView
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    return 20;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+    cell.textLabel.text = [NSString stringWithFormat:@"%ld : %ld", (long)indexPath.section, (long)indexPath.row];
+    
+    return cell;
 }
 
 @end

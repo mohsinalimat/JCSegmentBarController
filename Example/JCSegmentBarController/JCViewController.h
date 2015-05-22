@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface JCViewController : UIViewController
+@interface JCViewController : UITableViewController
 
 @end
