@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/cocoapods/l/JCSegmentBarController.svg?style=flat)](http://cocoapods.org/pods/JCSegmentBarController)
 [![Platform](https://img.shields.io/cocoapods/p/JCSegmentBarController.svg?style=flat)](http://cocoapods.org/pods/JCSegmentBarController)
 
-supports automatic rolling and click event.
+A short description of JCSegmentBarController.
 
 <img width="320" src="./ScreenShot.png"> 
 

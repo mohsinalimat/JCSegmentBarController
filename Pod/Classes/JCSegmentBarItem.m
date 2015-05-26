@@ -10,27 +10,25 @@
 
 @implementation JCSegmentBarItem
 
-- (void)awakeFromNib
+- (instancetype)initWithFrame:(CGRect)frame
 {
-    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-    [self.contentView addSubview:self.titleLabel];
+    if (self = [super initWithFrame:frame]) {
+        self.titleLabel = [[UILabel alloc] initWithFrame:self.bounds];
+        self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        self.titleLabel.textAlignment = NSTextAlignmentCenter;
+        self.titleLabel.textColor = [UIColor darkGrayColor];
+        self.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+        [self.contentView addSubview:self.titleLabel];
+    }
     
-    self.iconImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    [self.contentView addSubview:self.iconImageView];
+    return self;
 }
 
 - (void)layoutSubviews
 {
-    if(self.iconImageView.image) {
-        self.iconImageView.frame = CGRectMake(5.0f, 5.0f, 20.0f, 20.0f);
-        [self.titleLabel sizeToFit];
-        self.titleLabel.frame = CGRectMake(25.0f, 5.0f, self.titleLabel.frame.size.width, self.titleLabel.frame.size.height);
-    }
-    else {
-        self.titleLabel.frame = self.contentView.bounds;
-    }
+    [super layoutSubviews];
+    
+    self.titleLabel.frame = self.bounds;
 }
 
 - (void)prepareForReuse
@@ -38,7 +36,6 @@
     [super prepareForReuse];
     
     self.titleLabel.text = @"";
-    self.iconImageView.image = nil;
 }
 
 @end

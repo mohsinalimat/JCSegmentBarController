@@ -8,14 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+@class JCSegmentBar;
+@class JCSegmentBarItem;
+typedef void (^JCSegmentBarItemSeletedBlock)(JCSegmentBarItem *item);
+
+@class JCSegmentBarController;
 @interface JCSegmentBar : UICollectionView
 
 @property(nonatomic, retain) UIColor *tintColor;
 @property(nonatomic, retain) UIColor *barTintColor;
 @property(nonatomic, retain) UIColor *selectedTintColor;
 
-@property(nonatomic,getter=isTranslucent) BOOL translucent;
+//@property(nonatomic, getter = isTranslucent) BOOL translucent;
 
-//@property(nonatomic,assign) UITabBarItem        *selectedItem;
+- (void)didSeletedSegmentBarItem:(JCSegmentBarItemSeletedBlock)seletedBlock;
 
 @end

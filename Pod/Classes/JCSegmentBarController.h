@@ -18,28 +18,29 @@
 
 @interface JCSegmentBarController : UIViewController
 
+@property (nonatomic, assign) CGFloat itemWidth;
+@property(nonatomic, copy) NSArray *viewControllers;
 
-//@property(nonatomic,copy) NSArray *viewControllers;
-//@property(nonatomic,assign) UIViewController *selectedViewController;
-//@property(nonatomic) NSUInteger selectedIndex;
+@property(nonatomic, strong, readonly) JCSegmentBar *segmentBar;
 
-
-
-@property(nonatomic, copy) NSArray *items;
-
-@property(nonatomic, readonly) JCSegmentBar *segmentBar;
-
+@property(nonatomic, assign) NSUInteger selectedIndex;
 @property(nonatomic, weak) JCSegmentBarItem *selectedItem;
+@property(nonatomic, weak) UIViewController *selectedViewController;
 
-- (void)setItems:(NSArray *)items animated:(BOOL)animated;
+@property(nonatomic, weak) id<JCSegmentBarControllerDelegate> delegate;
 
-@property(nonatomic, assign) id<JCSegmentBarControllerDelegate> delegate;
+- (instancetype)initWithViewControllers:(NSArray *)viewControllers;
+
+//- (void)scrollToViewWithIndex:(NSInteger)index animated:(BOOL)animated;
+
+//- (void)setItems:(NSArray *)items animated:(BOOL)animated;
 
 @end
-//@interface UIViewController (UITabBarControllerItem)
-//
-//@property(nonatomic,retain) UITabBarItem *tabBarItem; // Automatically created lazily with the view controller's title if it's not set explicitly.
-//
-//@property(nonatomic,readonly,retain) UITabBarController *tabBarController; // If the view controller has a tab bar controller as its ancestor, return it. Returns nil otherwise.
-//
-//@end
+
+@interface UIViewController (JCSegmentBarControllerItem)
+
+@property(nonatomic, strong, readonly) JCSegmentBarItem *segmentBarItem; // Automatically created lazily with the view controller's title if it's not set explicitly.
+
+@property(nonatomic, strong, readonly) JCSegmentBarController *segmentBarController; // If the view controller has a tab bar controller as its ancestor, return it. Returns nil otherwise.
+
+@end

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="hIa-0m-9bZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="gIH-vA-ud6">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
     </dependencies>
     <scenes>
-        <!--JCSegmentBarController-->
+        <!--View Controller-->
         <scene sceneID="yqU-rd-Grd">
             <objects>
-                <tableViewController id="gIH-vA-ud6" customClass="JCViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="JCViewController" id="gIH-vA-ud6" customClass="JCViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="lfs-er-FeN">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -26,28 +26,12 @@
                             <outlet property="delegate" destination="gIH-vA-ud6" id="cPu-Bz-lpk"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="JCSegmentBarController" id="WTF-0M-zRV"/>
+                    <navigationItem key="navigationItem" id="WTF-0M-zRV"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fSx-N0-Doe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="610" y="479"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="2Mn-mA-qXL">
-            <objects>
-                <navigationController id="hIa-0m-9bZ" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="2kr-5T-BaC">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="gIH-vA-ud6" kind="relationship" relationship="rootViewController" id="4bQ-9f-m8q"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="HgQ-Sd-Uca" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="218" y="479"/>
+            <point key="canvasLocation" x="-1217" y="-1193"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

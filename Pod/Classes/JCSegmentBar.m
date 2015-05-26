@@ -14,6 +14,8 @@
 
 @property (nonatomic, weak) JCSegmentBarController *segmentBarController;
 
+@property (nonatomic, copy) JCSegmentBarItemSeletedBlock seletedBlock;
+
 @end
 
 @implementation JCSegmentBar
@@ -22,80 +24,82 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
 
 - (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame];
+    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    flowLayout.sectionInset = UIEdgeInsetsZero;
+    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    flowLayout.minimumLineSpacing = 0;
+    flowLayout.minimumInteritemSpacing = 0;
     
-    if (self) {
+    if (self = [super initWithFrame:frame collectionViewLayout:flowLayout]) {
+        self.barTintColor = [UIColor colorWithRed:241/255.0f green:241/255.0f blue:241/255.0f alpha:1];
+        self.tintColor = [UIColor darkGrayColor];
+        self.selectedTintColor = [UIColor redColor];
+        
         self.delegate = self;
         self.dataSource = self;
-        self.backgroundColor = [UIColor whiteColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        self.showsHorizontalScrollIndicator = NO;
+        self.showsVerticalScrollIndicator = NO;
         
         [self registerClass:[JCSegmentBarItem class] forCellWithReuseIdentifier:reuseIdentifier];
-        
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.sectionInset = UIEdgeInsetsZero;
-        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        layout.minimumLineSpacing = 0;
-        layout.minimumInteritemSpacing = 0;
-        layout.itemSize = CGSizeMake(100, 40);
     }
     
     return self;
 }
 
-- (void)layoutSubviews
+- (void)didSeletedSegmentBarItem:(JCSegmentBarItemSeletedBlock)seletedBlock
 {
-    [super layoutSubviews];
-    
-    self.frame = self.bounds;
-    
-//    [self reloadData];
+    self.seletedBlock = seletedBlock;
 }
-
-//- (UICollectionView *)segmentBar
-//{
-//    if (!_segmentBar) {
-//        CGRect frame = self.view.bounds;
-//        frame.size.height = SEGMENT_BAR_HEIGHT;
-
-//        UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0, frame.size.height - 1, frame.size.width, 1)];
-//        [separator setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
-//        [separator setBackgroundColor:UIColorFromRGB(0xdcdcdc)];
-//        [_segmentBar addSubview:separator];
-//    }
-//    return _segmentBar;
-//}
 
 #pragma mark - UICollectionViewDelegate | UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.segmentBarController.items.count;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    JCSegmentBarItem *item = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
-//    UIViewController *vc = self.viewControllers[indexPath.row];
-    item.titleLabel.text = @"aaa";
-    item.iconImageView.image = nil;
+    self.backgroundColor = self.barTintColor;
+    self.segmentBarController = (JCSegmentBarController *)[self jc_getViewController];
     
-    return item;
+    return self.segmentBarController.viewControllers.count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return self.bounds.size;
+    return CGSizeMake(self.segmentBarController.itemWidth, self.frame.size.height);
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UIViewController *vc = self.segmentBarController.viewControllers[indexPath.item];
+    
+    JCSegmentBarItem *item = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+    item.titleLabel.text = vc.title;
+    item.tag = indexPath.item;
+    
+    if (self.segmentBarController.selectedIndex == indexPath.item) {
+        item.titleLabel.textColor = self.selectedTintColor;
+        
+        [UIView animateWithDuration:0.3f animations:^{
+            item.transform = CGAffineTransformMakeScale(1.2, 1.2);
+        }];
+    }
+    else {
+        item.titleLabel.textColor = self.tintColor;
+        
+        [UIView animateWithDuration:0.3f animations:^{
+            item.transform = CGAffineTransformIdentity;
+        }];
+    }
+    
+    return item;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    UIViewController *vc = self.viewControllers[indexPath.row];
-//    if ([_delegate respondsToSelector:@selector(slideSegment:didSelectedViewController:)]) {
-//        [_delegate slideSegment:collectionView didSelectedViewController:vc];
-//    }
-//    [self setSelectedIndex:indexPath.row];
-//    [self scrollToViewWithIndex:self.selectedIndex animated:NO];
+    if (self.seletedBlock) {
+        self.seletedBlock((JCSegmentBarItem *)[collectionView cellForItemAtIndexPath:indexPath]);
+        
+        [collectionView reloadData];
+    }
 }
 
 #pragma mark - private method

@@ -2,29 +2,13 @@
 //  JCViewController.m
 //  JCSegmentBarController
 //
-//  Created by lijingcheng on 04/23/2015.
-//  Copyright (c) 2014 lijingcheng. All rights reserved.
+//  Created by 李京城 on 15/5/22.
+//  Copyright (c) 2015年 lijingcheng. All rights reserved.
 //
 
 #import "JCViewController.h"
 
-@interface JCViewController ()
-
-@end
-
 @implementation JCViewController
-
-static NSString * const reuseIdentifier = @"cellId";
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    
-    
-}
-
-#pragma mark - UITableView
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -33,9 +17,13 @@ static NSString * const reuseIdentifier = @"cellId";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
-    cell.textLabel.text = [NSString stringWithFormat:@"%ld : %ld", (long)indexPath.section, (long)indexPath.row];
+    static NSString * const reuseIdentifier = @"cellId";
     
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@, %ld", self.title, (long)indexPath.row];
+    
+    
+    cell.backgroundColor = [UIColor purpleColor];
     return cell;
 }
 

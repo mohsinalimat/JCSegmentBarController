@@ -275,10 +275,10 @@
 			children = (
 				E23F61C0701A09A2EFFE7E9A /* JCSegmentBar.h */,
 				DBFE70C825654E0100762FA5 /* JCSegmentBar.m */,
-				9D3AEE64E07DCB598B2146EA /* JCSegmentBarController.h */,
-				FC5C3D5322AA20722FA1F31F /* JCSegmentBarController.m */,
 				5627455B2B692FB9E19F7FC7 /* JCSegmentBarItem.h */,
 				9211F8631F11E8ABF624C631 /* JCSegmentBarItem.m */,
+				9D3AEE64E07DCB598B2146EA /* JCSegmentBarController.h */,
+				FC5C3D5322AA20722FA1F31F /* JCSegmentBarController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";

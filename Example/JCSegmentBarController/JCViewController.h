@@ -2,8 +2,8 @@
 //  JCViewController.h
 //  JCSegmentBarController
 //
-//  Created by lijingcheng on 04/23/2015.
-//  Copyright (c) 2014 lijingcheng. All rights reserved.
+//  Created by 李京城 on 15/5/22.
+//  Copyright (c) 2015年 lijingcheng. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
