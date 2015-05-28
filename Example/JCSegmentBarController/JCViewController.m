@@ -7,6 +7,7 @@
 //
 
 #import "JCViewController.h"
+#import "JCSegmentBarController.h"
 
 @implementation JCViewController
 
@@ -22,9 +23,14 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
     cell.textLabel.text = [NSString stringWithFormat:@"%@, %ld", self.title, (long)indexPath.row];
     
-    
-    cell.backgroundColor = [UIColor purpleColor];
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    [self.segmentBarController scrollToItemAtIndex:0 animated:YES];
+    NSLog(@"sd: %d", self.segmentBarController.viewControllers==nil);
 }
 
 @end

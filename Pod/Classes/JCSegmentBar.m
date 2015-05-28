@@ -9,6 +9,10 @@
 #import "JCSegmentBar.h"
 #import "JCSegmentBarItem.h"
 #import "JCSegmentBarController.h"
+#import <objc/runtime.h>
+
+extern const void *segmentBarControllerKey;
+extern const void *segmentBarItemKey;
 
 @interface JCSegmentBar ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
@@ -31,9 +35,10 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
     flowLayout.minimumInteritemSpacing = 0;
     
     if (self = [super initWithFrame:frame collectionViewLayout:flowLayout]) {
-        self.barTintColor = [UIColor colorWithRed:241/255.0f green:241/255.0f blue:241/255.0f alpha:1];
+        self.barTintColor = [UIColor colorWithRed:227/255.0f green:227/255.0f blue:227/255.0f alpha:1];
         self.tintColor = [UIColor darkGrayColor];
         self.selectedTintColor = [UIColor redColor];
+        self.translucent = YES;
         
         self.delegate = self;
         self.dataSource = self;
@@ -47,6 +52,28 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
     return self;
 }
 
+- (void)didMoveToSuperview
+{
+    self.backgroundColor = self.barTintColor;
+    
+    self.segmentBarController = (JCSegmentBarController *)[self jc_getViewController];
+    
+    NSInteger count = self.segmentBarController.viewControllers.count;
+    for (int i = 0; i < count; i++) {
+        JCSegmentBarItem *item = (JCSegmentBarItem *)[self cellForItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
+        UIViewController *vc = self.segmentBarController.viewControllers[i];
+        
+        if (i == 0) {
+            self.segmentBarController.selectedIndex = i;
+            self.segmentBarController.selectedItem = item;
+            self.segmentBarController.selectedViewController = vc;
+        }
+        
+        objc_setAssociatedObject(vc, &segmentBarItemKey, item, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(vc, &segmentBarControllerKey, self.segmentBarController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
+
 - (void)didSeletedSegmentBarItem:(JCSegmentBarItemSeletedBlock)seletedBlock
 {
     self.seletedBlock = seletedBlock;
@@ -56,9 +83,6 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    self.backgroundColor = self.barTintColor;
-    self.segmentBarController = (JCSegmentBarController *)[self jc_getViewController];
-    
     return self.segmentBarController.viewControllers.count;
 }
 
@@ -73,7 +97,6 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
     
     JCSegmentBarItem *item = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     item.titleLabel.text = vc.title;
-    item.tag = indexPath.item;
     
     if (self.segmentBarController.selectedIndex == indexPath.item) {
         item.titleLabel.textColor = self.selectedTintColor;
@@ -96,9 +119,7 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.seletedBlock) {
-        self.seletedBlock((JCSegmentBarItem *)[collectionView cellForItemAtIndexPath:indexPath]);
-        
-        [collectionView reloadData];
+        self.seletedBlock(indexPath.item);
     }
 }
 

@@ -10,6 +10,10 @@
 #import "JCViewController.h"
 #import "JCSegmentBarController.h"
 
+@interface JCAppDelegate ()<JCSegmentBarControllerDelegate>
+
+@end
+
 @implementation JCAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -22,9 +26,8 @@
     vc2.title = @"钟表";
     JCViewController *vc3 = [storyboard instantiateViewControllerWithIdentifier:@"JCViewController"];
     vc3.title = @"鞋帽";
-    UIViewController *vc4 = [[UIViewController alloc] init];
+    JCViewController *vc4 = [storyboard instantiateViewControllerWithIdentifier:@"JCViewController"];
     vc4.title = @"礼品";
-    vc4.view.backgroundColor = [UIColor lightGrayColor];
     JCViewController *vc5 = [storyboard instantiateViewControllerWithIdentifier:@"JCViewController"];
     vc5.title = @"首饰";
     JCViewController *vc6 = [storyboard instantiateViewControllerWithIdentifier:@"JCViewController"];
@@ -36,16 +39,25 @@
     
     JCSegmentBarController *segmentBarController = [[JCSegmentBarController alloc] initWithViewControllers:@[vc1, vc2, vc3, vc4, vc5, vc6, vc7, vc8]];
     segmentBarController.title = @"JCSegmentBarController";
+    segmentBarController.delegate = self;
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:segmentBarController];
-//    nav.navigationBar.barTintColor = [UIColor lightGrayColor];
+    nav.navigationBar.barTintColor = [UIColor orangeColor];
     
     
-    UITabBarController *tabBarController = [[UITabBarController alloc] init];
-    tabBarController.viewControllers = @[nav];
-    self.window.rootViewController = tabBarController;
+//    segmentBarController.segmentBar.translucent = NO;
+    
+//    UITabBarController *tabBarController = [[UITabBarController alloc] init];
+//    tabBarController.viewControllers = @[nav];
+    
+    self.window.rootViewController = nav;
     
     return YES;
+}
+
+- (void)segmentBarController:(JCSegmentBarController *)segmentBarController didSelectItem:(JCSegmentBarItem *)item
+{
+    NSLog(@"__%s__", __func__);
 }
 
 @end

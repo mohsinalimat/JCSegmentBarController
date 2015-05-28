@@ -7,15 +7,16 @@
 //
 
 #import "JCSegmentBarController.h"
+#import "JCSegmentBar.h"
+#import "JCSegmentBarItem.h"
+#import <objc/runtime.h>
 
-#define kScreenWidth [UIScreen mainScreen].bounds.size.width
-#define kScreenHeight [UIScreen mainScreen].bounds.size.height
+const void *segmentBarControllerKey;
+const void *segmentBarItemKey;
 
-const CGFloat kSegmentBarHeight = 36.0f;
+@interface JCSegmentBarController ()
 
-@interface JCSegmentBarController ()<UICollectionViewDelegate, UICollectionViewDataSource>
-
-@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, assign) UIEdgeInsets contentInset;
 
 @end
 
@@ -33,8 +34,15 @@ static NSString * const reuseIdentifier = @"contentCellId";
 
 - (instancetype)init
 {
-    if (self = [super init]) {
-        self.itemWidth = kScreenWidth/5;//default 1行完整显示5个
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.sectionInset = UIEdgeInsetsZero;
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    layout.minimumLineSpacing = 0;
+    layout.minimumInteritemSpacing = 0;
+    
+    if (self = [super initWithCollectionViewLayout:layout]) {
+       
+        self.itemWidth = [UIScreen mainScreen].bounds.size.width/5;//default 1行完整显示5个
         
         _segmentBar = [[JCSegmentBar alloc] initWithFrame:CGRectZero];
     }
@@ -45,132 +53,57 @@ static NSString * const reuseIdentifier = @"contentCellId";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    self.automaticallyAdjustsScrollViewInsets = NO;
-    self.navigationController.navigationBar.translucent = YES;
     
+    self.navigationController.navigationBar.translucent = self.segmentBar.translucent;
     
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.sectionInset = UIEdgeInsetsZero;
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    layout.minimumLineSpacing = 0;
-    layout.minimumInteritemSpacing = 0;
-    
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.automaticallyAdjustsScrollViewInsets = NO;
+
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.pagingEnabled = YES;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.backgroundColor = [UIColor whiteColor];
-    
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
-    [self.view addSubview:self.collectionView];
-    
-//NSLog(@"1___%@",NSStringFromCGSize(self.collectionView.frame.size));
-//    self.collectionView.
-//    self.collectionView.backgroundColor = [UIColor yellowColor];
-//    self.view.backgroundColor = [UIColor clearColor];
-    
-    [_segmentBar didSeletedSegmentBarItem:^(JCSegmentBarItem *item) {
-        self.selectedItem = item;
-        self.selectedIndex = item.tag;
-        self.selectedViewController = self.viewControllers[self.selectedIndex];
-        
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.selectedIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+
+    [self.segmentBar didSeletedSegmentBarItem:^(NSInteger index) {
+        [self scrollToItemAtIndex:index animated:NO];
     }];
-    [self.view addSubview:_segmentBar];
+    [self.view addSubview:self.segmentBar];
     
-    
-    
-    
-}
-//2015-05-26 15:39:40.107 Test[4656:67822] {{0, 0}, {375, 618}}
-//2015-05-26 15:39:40.108 Test[4656:67822] {64, 0, 49, 0}
-
-- (void)viewDidLayoutSubviews
-{
-    NSLog(@"%@",NSStringFromCGRect(self.collectionView.frame));
-    NSLog(@"%@",NSStringFromUIEdgeInsets(self.collectionView.contentInset));
-
+    CGFloat segmentBarWidth = self.collectionView.frame.size.width;
+    CGFloat segmentBarHeight = 36.0f;
+   
     if (self.navigationController.navigationBar.translucent) {
-        
-        _segmentBar.alpha = 0.68;
-        //        self.collectionView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight);
-        
-        
-//        self.segmentBar.frame = CGRectMake(0, 64, kScreenWidth, kSegmentBarHeight);
-        //        self.collectionView.frame = CGRectMake(0, 64+kSegmentBarHeight, kScreenWidth, kScreenHeight-kSegmentBarHeight-44);
-        
-//        if (self.tabBarController) {
-//            
-//            //            self.collectionView.frame = CGRectMake(0, 64+kSegmentBarHeight, kScreenWidth, kScreenHeight-kSegmentBarHeight-64-49);
-//            
-            self.collectionView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight);
-//
-//            
-            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49, 0);
-//        }
-//        else {
-//            self.collectionView.frame = CGRectMake(0, 64+kSegmentBarHeight, kScreenWidth, kScreenHeight-kSegmentBarHeight-64);
-//            
-//            
-//        }
-//        
-//        NSLog(@"1, %@", NSStringFromUIEdgeInsets(self.collectionView.contentInset));
-        
-        
-        
-        
-        
-        
-//        _segmentBar.alpha = 0.68;
-////        self.collectionView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight);
-//        
-//        
-//        self.segmentBar.frame = CGRectMake(0, 64, kScreenWidth, kSegmentBarHeight);
-////        self.collectionView.frame = CGRectMake(0, 64+kSegmentBarHeight, kScreenWidth, kScreenHeight-kSegmentBarHeight-44);
-//        
-//        if (self.tabBarController) {
-//            
-////            self.collectionView.frame = CGRectMake(0, 64+kSegmentBarHeight, kScreenWidth, kScreenHeight-kSegmentBarHeight-64-49);
-//       
-//            self.collectionView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight);
-//            
-//            
-//            self.collectionView.contentInset = UIEdgeInsetsMake(136, 0, -149, 0);
-//        }
-//        else {
-//            self.collectionView.frame = CGRectMake(0, 64+kSegmentBarHeight, kScreenWidth, kScreenHeight-kSegmentBarHeight-64);
-//            
-//            
-//        }
-//        
-//   NSLog(@"1, %@", NSStringFromUIEdgeInsets(self.collectionView.contentInset));
-//        
-//        self.collectionView.contentInset = UIEdgeInsetsMake(64+kSegmentBarHeight, 0, 49, 0);
+        self.segmentBar.alpha = 0.95;
+        CGFloat y = [UIApplication sharedApplication].statusBarFrame.size.height + self.navigationController.navigationBar.frame.size.height;
+        self.segmentBar.frame = CGRectMake(0, y, segmentBarWidth, segmentBarHeight);
     }
     else {
-        _segmentBar.alpha = 1;
+        self.segmentBar.alpha = 1;
+        self.segmentBar.frame = CGRectMake(0, 0, segmentBarWidth, segmentBarHeight);
+    }
+    
+    CGFloat bottom = self.tabBarController ? self.tabBarController.tabBar.frame.size.height : 0;
+    self.contentInset = UIEdgeInsetsMake(self.segmentBar.frame.origin.y + segmentBarHeight, 0, bottom, 0);
+}
+
+- (void)scrollToItemAtIndex:(NSInteger)index animated:(BOOL)animated
+{
+    if (index >= 0 && index < self.viewControllers.count) {
+        JCSegmentBarItem *item = (JCSegmentBarItem *)[self.segmentBar cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+        self.selectedItem = item;
+        self.selectedIndex = index;
+        self.selectedViewController = self.viewControllers[self.selectedIndex];
         
-        self.edgesForExtendedLayout = UIRectEdgeNone;
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.selectedIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
         
-        self.segmentBar.frame = CGRectMake(0, 0, kScreenWidth, kSegmentBarHeight);
+        [self.segmentBar reloadData];
         
-        if (self.tabBarController) {
-            self.collectionView.frame = CGRectMake(0, kSegmentBarHeight, kScreenWidth, kScreenHeight-kSegmentBarHeight-64-49);
+        if ([self.delegate respondsToSelector:@selector(segmentBarController:didSelectItem:)]) {
+            [self.delegate segmentBarController:self didSelectItem:item];
         }
-        else {
-            self.collectionView.frame = CGRectMake(0, kSegmentBarHeight, kScreenWidth, kScreenHeight-kSegmentBarHeight-64);
-            
-          
-        }
-        
-        
-//        UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*) self.collectionView.collectionViewLayout;
-//        layout.itemSize = self.collectionView.bounds.size;
-//        
-//        self.collectionView.collectionViewLayout = layout;
     }
 }
 
@@ -183,20 +116,40 @@ static NSString * const reuseIdentifier = @"contentCellId";
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    NSLog(@"___%@",NSStringFromCGSize(collectionView.frame.size));
-//    return collectionView.frame.size;
-    return CGSizeMake(kScreenWidth, collectionView.frame.size.height-64-49);
+    return collectionView.frame.size;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
-    UIViewController *vc = self.viewControllers[indexPath.item];
-    vc.view.frame = cell.contentView.bounds;
-//    NSLog(@"%@,%@",NSStringFromCGRect(collectionView.bounds), NSStringFromCGRect(cell.contentView.bounds));
-    [cell.contentView addSubview:vc.view];//考虑下是这样好，还是用childViewController好
-//    cell.backgroundColor = [UIColor redColor];
+    
+    UIScrollView *scrollView = (UIScrollView *)((UIViewController *)self.viewControllers[indexPath.item]).view;
+    scrollView.frame = cell.contentView.bounds;
+    scrollView.contentInset = self.contentInset;
+    
+    for (UIView *view in cell.contentView.subviews) {
+        [view removeFromSuperview];
+    }
+    
+    [cell.contentView addSubview:scrollView];
+    
     return cell;
+}
+
+@end
+
+#pragma mark - 
+
+@implementation UIViewController (JCSegmentBarControllerItem)
+
+- (JCSegmentBarController *)segmentBarController
+{
+    return objc_getAssociatedObject(self, &segmentBarControllerKey);
+}
+
+- (JCSegmentBarItem *)segmentBarItem
+{
+    return objc_getAssociatedObject(self, &segmentBarItemKey);
 }
 
 @end
