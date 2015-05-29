@@ -12,3 +12,9 @@
 #define COCOAPODS_VERSION_MINOR_JCSegmentBarController 0
 #define COCOAPODS_VERSION_PATCH_JCSegmentBarController 1
 
+// KVOController
+#define COCOAPODS_POD_AVAILABLE_KVOController
+#define COCOAPODS_VERSION_MAJOR_KVOController 1
+#define COCOAPODS_VERSION_MINOR_KVOController 0
+#define COCOAPODS_VERSION_PATCH_KVOController 3
+

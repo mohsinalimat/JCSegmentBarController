@@ -7,24 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "JCSegmentBar.h"
+#import "JCSegmentBarItem.h"
 
-@class JCSegmentBar;
-@class JCSegmentBarItem;
 @class JCSegmentBarController;
 @protocol JCSegmentBarControllerDelegate<NSObject>
 @optional
 - (void)segmentBarController:(JCSegmentBarController *)segmentBarController didSelectItem:(JCSegmentBarItem *)item;
 @end
 
-@interface JCSegmentBarController : UICollectionViewController
+@interface JCSegmentBarController : UIViewController
 
-@property (nonatomic, strong, readonly) JCSegmentBar *segmentBar;
+@property (nonatomic, strong) JCSegmentBar *segmentBar;
 
 @property (nonatomic, weak) id<JCSegmentBarControllerDelegate> delegate;
 
 @property (nonatomic, copy) NSArray *viewControllers;
-
-@property (nonatomic, assign) CGFloat itemWidth;
 
 @property (nonatomic, assign) NSUInteger selectedIndex;
 @property (nonatomic, weak) JCSegmentBarItem *selectedItem;

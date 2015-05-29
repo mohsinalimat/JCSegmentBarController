@@ -9,6 +9,7 @@
 #import "JCSegmentBar.h"
 #import "JCSegmentBarItem.h"
 #import "JCSegmentBarController.h"
+#import <KVOController/FBKVOController.h>
 #import <objc/runtime.h>
 
 extern const void *segmentBarControllerKey;
@@ -19,6 +20,8 @@ extern const void *segmentBarItemKey;
 @property (nonatomic, weak) JCSegmentBarController *segmentBarController;
 
 @property (nonatomic, copy) JCSegmentBarItemSeletedBlock seletedBlock;
+
+@property (nonatomic, assign) CGFloat itemWidth;
 
 @end
 
@@ -35,18 +38,21 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
     flowLayout.minimumInteritemSpacing = 0;
     
     if (self = [super initWithFrame:frame collectionViewLayout:flowLayout]) {
-        self.barTintColor = [UIColor colorWithRed:227/255.0f green:227/255.0f blue:227/255.0f alpha:1];
-        self.tintColor = [UIColor darkGrayColor];
-        self.selectedTintColor = [UIColor redColor];
-        self.translucent = YES;
-        
         self.delegate = self;
         self.dataSource = self;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
-        
         [self registerClass:[JCSegmentBarItem class] forCellWithReuseIdentifier:reuseIdentifier];
+        
+        [self.KVOController observe:self keyPath:@"barTintColor" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld action:@selector(observeBarTintColor:)];
+        
+        self.barTintColor = [UIColor colorWithRed:227/255.0f green:227/255.0f blue:227/255.0f alpha:1];
+        self.tintColor = [UIColor darkGrayColor];
+        self.selectedTintColor = [UIColor redColor];
+        self.translucent = YES;
+        
+        self.itemWidth = [UIScreen mainScreen].bounds.size.width/5;// 1 line can display 5 JCSegmentBarItem
     }
     
     return self;
@@ -54,9 +60,8 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
 
 - (void)didMoveToSuperview
 {
-    self.backgroundColor = self.barTintColor;
-    
     self.segmentBarController = (JCSegmentBarController *)[self jc_getViewController];
+    self.segmentBarController.navigationController.navigationBar.translucent = self.translucent;
     
     NSInteger count = self.segmentBarController.viewControllers.count;
     for (int i = 0; i < count; i++) {
@@ -71,6 +76,19 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
         
         objc_setAssociatedObject(vc, &segmentBarItemKey, item, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         objc_setAssociatedObject(vc, &segmentBarControllerKey, self.segmentBarController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
+    CGFloat segmentBarWidth = [UIScreen mainScreen].bounds.size.width;
+    CGFloat segmentBarHeight = 36.0f;
+    
+    if (self.translucent) {
+        self.alpha = 0.95;
+        CGFloat y = [UIApplication sharedApplication].statusBarFrame.size.height + self.segmentBarController.navigationController.navigationBar.frame.size.height;
+        self.frame = CGRectMake(0, y, segmentBarWidth, segmentBarHeight);
+    }
+    else {
+        self.alpha = 1;
+        self.frame = CGRectMake(0, 0, segmentBarWidth, segmentBarHeight);
     }
 }
 
@@ -88,7 +106,7 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.segmentBarController.itemWidth, self.frame.size.height);
+    return CGSizeMake(self.itemWidth, self.frame.size.height);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -123,7 +141,12 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
     }
 }
 
-#pragma mark - private method
+#pragma mark -
+
+- (void)observeBarTintColor:(NSDictionary *)change
+{
+    self.backgroundColor = self.barTintColor;
+}
 
 - (UIViewController *)jc_getViewController
 {

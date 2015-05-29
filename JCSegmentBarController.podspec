@@ -22,4 +22,5 @@ Pod::Spec.new do |s|
   s.resource_bundles = {
     'JCSegmentBarController' => ['Pod/Assets/*.png']
   }
+  s.dependency 'KVOController', '~> 1.0.3'
 end

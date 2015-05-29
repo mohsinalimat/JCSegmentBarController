@@ -28,9 +28,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    [self.segmentBarController scrollToItemAtIndex:0 animated:YES];
-    NSLog(@"sd: %d", self.segmentBarController.viewControllers==nil);
+    [self.segmentBarController scrollToItemAtIndex:1 animated:YES];
+ 
+    NSLog(@"self.segmentBarController.selectedIndex: %d", self.segmentBarController.selectedIndex);
 }
 
 @end
