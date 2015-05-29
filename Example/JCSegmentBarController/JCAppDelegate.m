@@ -45,7 +45,6 @@
 //    segmentBarController.segmentBar.selectedTintColor = [UIColor purpleColor];
 //    segmentBarController.segmentBar.translucent = NO;
     
-    
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:segmentBarController];
     nav.navigationBar.barTintColor = [UIColor orangeColor];
     self.window.rootViewController = nav;
