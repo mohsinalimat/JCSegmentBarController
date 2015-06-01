@@ -11,6 +11,7 @@
 
 const void *segmentBarControllerKey;
 const void *segmentBarItemKey;
+const NSInteger kDisplayCount = 5;// 1 line can display 5 JCSegmentBarItem
 
 @interface JCSegmentBarController ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
@@ -75,7 +76,7 @@ static NSString * const reuseIdentifier = @"contentCellId";
 
 - (void)scrollToItemAtIndex:(NSInteger)index animated:(BOOL)animated
 {
-    if (index >= 0 && index < self.viewControllers.count) {
+    if (index >= 0 && index < self.viewControllers.count && index != self.selectedIndex) {
         JCSegmentBarItem *item = (JCSegmentBarItem *)[self.segmentBar cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         self.selectedItem = item;
         self.selectedIndex = index;
@@ -85,10 +86,30 @@ static NSString * const reuseIdentifier = @"contentCellId";
         
         [self.segmentBar reloadData];
         
+        [self changeSegmentBarContentOffset:index];
+        
         if ([self.delegate respondsToSelector:@selector(segmentBarController:didSelectItem:)]) {
             [self.delegate segmentBarController:self didSelectItem:item];
         }
     }
+}
+
+- (void)changeSegmentBarContentOffset:(NSInteger)index
+{
+    CGFloat itemWidth = [UIScreen mainScreen].bounds.size.width/kDisplayCount;
+    CGFloat offsetX = 0;
+    
+    if (index <= 2) {
+        offsetX = 0;
+    }
+    else if (index >= (self.viewControllers.count - 3)) {
+        offsetX = (self.viewControllers.count - kDisplayCount) * itemWidth;
+    }
+    else {
+        offsetX = (index - kDisplayCount/2) * itemWidth;
+    }
+    
+    [self.segmentBar setContentOffset:CGPointMake(offsetX, 0) animated:YES];
 }
 
 #pragma mark - UICollectionViewDelegate & UICollectionViewDataSource
@@ -120,6 +141,95 @@ static NSString * const reuseIdentifier = @"contentCellId";
     return cell;
 }
 
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+//    NSLog(@"%@", NSStringFromCGPoint(scrollView.contentOffset));
+//    NSLog(@"%@", NSStringFromCGPoint(self.segmentBar.contentOffset));
+    
+//    float minX = 45.0;
+//    float mid  = [UIScreen mainScreen].bounds.size.width/2 - minX;
+//    float midM = [UIScreen mainScreen].bounds.size.width - minX;
+//    for(UIImageView *v in subviews){
+//        UIColor *c = gray;
+//        if(v.frame.origin.x > minX
+//           && v.frame.origin.x < mid)
+//            // Left part
+//            c = [self gradient:v.frame.origin.x
+//                              top:minX+1
+//                           bottom:mid-1];
+//        else if(v.frame.origin.x > mid
+//                && v.frame.origin.x < midM)
+//            // Right part
+//            c = [self gradient:v.frame.origin.x
+//                              top:mid+1
+//                           bottom:midM-1];
+//        else if(v.frame.origin.x == mid)
+//            c = orange;
+//        v.tintColor= c;
+//    }
+}
+
+- (UIColor *)gradient:(double)percent top:(double)topX bottom:(double)bottomX
+{
+    double t = (percent - bottomX) / (topX - bottomX);
+    
+    t = MAX(0.0, MIN(t, 1.0));
+    
+    const CGFloat *cgInit = CGColorGetComponents(self.segmentBar.tintColor.CGColor);
+    const CGFloat *cgGoal = CGColorGetComponents(self.segmentBar.selectedTintColor.CGColor);
+    
+    double r = cgInit[0] + t * (cgGoal[0] - cgInit[0]);
+    double g = cgInit[1] + t * (cgGoal[1] - cgInit[1]);
+    double b = cgInit[2] + t * (cgGoal[2] - cgInit[2]);
+    
+    return [UIColor colorWithRed:r green:g blue:b alpha:1];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    NSLog(@"___%s___", __func__);
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    NSLog(@"___%s___", __func__);
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    NSLog(@"___%s___", __func__);
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    NSLog(@"___%s___", __func__);
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    NSLog(@"___%s___", __func__);
+    
+    [self scrollToItemAtIndex:fabs(scrollView.contentOffset.x/scrollView.frame.size.width) animated:NO];
+}
+//- (void)scrollToItemAtIndex:(NSInteger)index animated:(BOOL)animated
+//{
+//    if (index >= 0 && index < self.viewControllers.count) {
+//        JCSegmentBarItem *item = (JCSegmentBarItem *)[self.segmentBar cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+//        self.selectedItem = item;
+//        self.selectedIndex = index;
+//        self.selectedViewController = self.viewControllers[self.selectedIndex];
+//        
+//        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.selectedIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
+//        
+//        [self.segmentBar reloadData];
+//        
+//        if ([self.delegate respondsToSelector:@selector(segmentBarController:didSelectItem:)]) {
+//            [self.delegate segmentBarController:self didSelectItem:item];
+//        }
+//    }
+//}
 @end
 
 #pragma mark - 

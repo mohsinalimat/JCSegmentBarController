@@ -30,7 +30,7 @@
 {
     [self.segmentBarController scrollToItemAtIndex:1 animated:YES];
  
-    NSLog(@"self.segmentBarController.selectedIndex: %d", self.segmentBarController.selectedIndex);
+    NSLog(@"self.segmentBarController.selectedIndex: %ld", (long)self.segmentBarController.selectedIndex);
 }
 
 @end

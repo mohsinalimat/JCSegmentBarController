@@ -14,6 +14,7 @@
 
 extern const void *segmentBarControllerKey;
 extern const void *segmentBarItemKey;
+extern const NSInteger kDisplayCount;
 
 @interface JCSegmentBar ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
@@ -52,7 +53,7 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
         self.selectedTintColor = [UIColor redColor];
         self.translucent = YES;
         
-        self.itemWidth = [UIScreen mainScreen].bounds.size.width/5;// 1 line can display 5 JCSegmentBarItem
+        self.itemWidth = [UIScreen mainScreen].bounds.size.width/kDisplayCount;
     }
     
     return self;
@@ -82,7 +83,7 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
     CGFloat segmentBarHeight = 36.0f;
     
     if (self.translucent) {
-        self.alpha = 0.95;
+        self.alpha = 0.96;
         CGFloat y = [UIApplication sharedApplication].statusBarFrame.size.height + self.segmentBarController.navigationController.navigationBar.frame.size.height;
         self.frame = CGRectMake(0, y, segmentBarWidth, segmentBarHeight);
     }
@@ -139,6 +140,10 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
     if (self.seletedBlock) {
         self.seletedBlock(indexPath.item);
     }
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSLog(@"%@", NSStringFromCGPoint(scrollView.contentOffset));
 }
 
 #pragma mark -

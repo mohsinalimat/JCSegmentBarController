@@ -36,8 +36,12 @@
     vc7.title = @"烟酒";
     JCViewController *vc8 = [storyboard instantiateViewControllerWithIdentifier:@"JCViewController"];
     vc8.title = @"电器";
+    JCViewController *vc9 = [storyboard instantiateViewControllerWithIdentifier:@"JCViewController"];
+    vc9.title = @"玩具";
+    JCViewController *vc10 = [storyboard instantiateViewControllerWithIdentifier:@"JCViewController"];
+    vc10.title = @"奶粉";
     
-    JCSegmentBarController *segmentBarController = [[JCSegmentBarController alloc] initWithViewControllers:@[vc1, vc2, vc3, vc4, vc5, vc6, vc7, vc8]];
+    JCSegmentBarController *segmentBarController = [[JCSegmentBarController alloc] initWithViewControllers:@[vc1, vc2, vc3, vc4, vc5, vc6, vc7, vc8, vc9, vc10]];
     segmentBarController.title = @"JCSegmentBarController";
     segmentBarController.delegate = self;
 //    segmentBarController.segmentBar.barTintColor = [UIColor yellowColor];
