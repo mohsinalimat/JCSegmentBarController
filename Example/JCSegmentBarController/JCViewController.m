@@ -11,6 +11,12 @@
 
 @implementation JCViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return 20;
@@ -28,9 +34,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.segmentBarController scrollToItemAtIndex:1 animated:YES];
- 
-    NSLog(@"self.segmentBarController.selectedIndex: %ld", (long)self.segmentBarController.selectedIndex);
+    NSLog(@"%s: selectedIndex: %ld,title: %@", __func__, (long)self.segmentBarController.selectedIndex, self.segmentBarItem.titleLabel.text);
 }
 
 @end

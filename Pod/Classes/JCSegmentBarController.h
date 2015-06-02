@@ -10,6 +10,12 @@
 #import "JCSegmentBar.h"
 #import "JCSegmentBarItem.h"
 
+typedef NS_OPTIONS(NSUInteger, UICollectionViewOrientationMask) {
+    UICollectionViewOrientationMaskNone,
+    UICollectionViewOrientationMaskLeft,
+    UICollectionViewOrientationMaskRight
+};
+
 @class JCSegmentBarController;
 @protocol JCSegmentBarControllerDelegate<NSObject>
 @optional
@@ -31,6 +37,8 @@
 - (instancetype)initWithViewControllers:(NSArray *)viewControllers;
 
 - (void)scrollToItemAtIndex:(NSInteger)index animated:(BOOL)animated;
+
+- (void)selected:(JCSegmentBarItem *)selectedItem unSelected:(JCSegmentBarItem *)unSelectedItem;
 
 @end
 

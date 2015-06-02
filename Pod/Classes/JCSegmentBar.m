@@ -10,10 +10,7 @@
 #import "JCSegmentBarItem.h"
 #import "JCSegmentBarController.h"
 #import <KVOController/FBKVOController.h>
-#import <objc/runtime.h>
 
-extern const void *segmentBarControllerKey;
-extern const void *segmentBarItemKey;
 extern const NSInteger kDisplayCount;
 
 @interface JCSegmentBar ()<UICollectionViewDelegate, UICollectionViewDataSource>
@@ -62,22 +59,6 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
 - (void)didMoveToSuperview
 {
     self.segmentBarController = (JCSegmentBarController *)[self jc_getViewController];
-    self.segmentBarController.navigationController.navigationBar.translucent = self.translucent;
-    
-    NSInteger count = self.segmentBarController.viewControllers.count;
-    for (int i = 0; i < count; i++) {
-        JCSegmentBarItem *item = (JCSegmentBarItem *)[self cellForItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
-        UIViewController *vc = self.segmentBarController.viewControllers[i];
-        
-        if (i == 0) {
-            self.segmentBarController.selectedIndex = i;
-            self.segmentBarController.selectedItem = item;
-            self.segmentBarController.selectedViewController = vc;
-        }
-        
-        objc_setAssociatedObject(vc, &segmentBarItemKey, item, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        objc_setAssociatedObject(vc, &segmentBarControllerKey, self.segmentBarController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
     
     CGFloat segmentBarWidth = [UIScreen mainScreen].bounds.size.width;
     CGFloat segmentBarHeight = 36.0f;
@@ -115,21 +96,17 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
     UIViewController *vc = self.segmentBarController.viewControllers[indexPath.item];
     
     JCSegmentBarItem *item = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+    item.tag = indexPath.item;
     item.titleLabel.text = vc.title;
+    item.titleLabel.textColor = self.tintColor;
     
-    if (self.segmentBarController.selectedIndex == indexPath.item) {
-        item.titleLabel.textColor = self.selectedTintColor;
-        
-        [UIView animateWithDuration:0.3f animations:^{
-            item.transform = CGAffineTransformMakeScale(1.2, 1.2);
-        }];
+    if (self.segmentBarController.selectedItem == nil) {
+        [self.segmentBarController selected:item unSelected:nil];
     }
     else {
-        item.titleLabel.textColor = self.tintColor;
-        
-        [UIView animateWithDuration:0.3f animations:^{
-            item.transform = CGAffineTransformIdentity;
-        }];
+        if (self.segmentBarController.selectedIndex == indexPath.item) {
+            [self.segmentBarController selected:self.segmentBarController.selectedItem unSelected:nil];
+        }
     }
     
     return item;
@@ -140,10 +117,6 @@ static NSString * const reuseIdentifier = @"segmentBarItemId";
     if (self.seletedBlock) {
         self.seletedBlock(indexPath.item);
     }
-}
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    NSLog(@"%@", NSStringFromCGPoint(scrollView.contentOffset));
 }
 
 #pragma mark -

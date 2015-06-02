@@ -45,7 +45,7 @@
     segmentBarController.title = @"JCSegmentBarController";
     segmentBarController.delegate = self;
 //    segmentBarController.segmentBar.barTintColor = [UIColor yellowColor];
-//    segmentBarController.segmentBar.tintColor = [UIColor greenColor];
+//    segmentBarController.segmentBar.tintColor = [UIColor blueColor];
 //    segmentBarController.segmentBar.selectedTintColor = [UIColor purpleColor];
 //    segmentBarController.segmentBar.translucent = NO;
     
@@ -62,7 +62,7 @@
 
 - (void)segmentBarController:(JCSegmentBarController *)segmentBarController didSelectItem:(JCSegmentBarItem *)item
 {
-    NSLog(@"__%s__", __func__);
+    NSLog(@"%s: selectedIndex: %ld,title: %@", __func__, (long)segmentBarController.selectedIndex, item.titleLabel.text);
 }
 
 @end
