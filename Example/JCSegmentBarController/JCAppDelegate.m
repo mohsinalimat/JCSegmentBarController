@@ -2,7 +2,7 @@
 //  JCAppDelegate.m
 //  JCSegmentBarController
 //
-//  Created by CocoaPods on 04/23/2015.
+//  Created by 李京城 on 04/23/2015.
 //  Copyright (c) 2014 lijingcheng. All rights reserved.
 //
 
