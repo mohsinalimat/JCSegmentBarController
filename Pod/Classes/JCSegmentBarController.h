@@ -10,12 +10,6 @@
 #import "JCSegmentBar.h"
 #import "JCSegmentBarItem.h"
 
-typedef NS_OPTIONS(NSUInteger, UICollectionViewOrientationMask) {
-    UICollectionViewOrientationMaskNone,
-    UICollectionViewOrientationMaskLeft,
-    UICollectionViewOrientationMaskRight
-};
-
 @class JCSegmentBarController;
 @protocol JCSegmentBarControllerDelegate<NSObject>
 @optional

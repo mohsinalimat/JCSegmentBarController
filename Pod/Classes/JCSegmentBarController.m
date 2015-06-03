@@ -7,7 +7,6 @@
 //
 
 #import "JCSegmentBarController.h"
-#import <KVOController/FBKVOController.h>
 #import <objc/runtime.h>
 
 static const void *segmentBarControllerKey;
@@ -67,8 +66,6 @@ static NSString * const reuseIdentifier = @"contentCellId";
     
     CGFloat bottom = self.tabBarController ? self.tabBarController.tabBar.frame.size.height : 0;
     self.contentInset = UIEdgeInsetsMake(self.segmentBar.frame.origin.y + self.segmentBar.frame.size.height, 0, bottom, 0);
-    
-    [self.KVOController observe:self.collectionView keyPath:@"contentOffset" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld action:@selector(observeCollectionViewContentOffset:)];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -144,87 +141,6 @@ static NSString * const reuseIdentifier = @"contentCellId";
     [self.segmentBar setContentOffset:CGPointMake(offsetX, 0) animated:YES];
 }
 
-- (void)observeCollectionViewContentOffset:(NSDictionary *)change
-{
-//    UICollectionViewOrientationMask direction = UICollectionViewOrientationMaskNone;
-//    
-//    CGFloat offsetX = [change[NSKeyValueChangeNewKey] CGPointValue].x;
-//    
-//    JCSegmentBarItem *item = nil;
-//    
-//    if (offsetX > [change[NSKeyValueChangeOldKey] CGPointValue].x) {
-//        direction = UICollectionViewOrientationMaskLeft;
-//        NSLog(@"right");
-//    }
-//    else if (offsetX < [change[NSKeyValueChangeOldKey] CGPointValue].x) {
-//        direction = UICollectionViewOrientationMaskRight;
-//        NSLog(@"left");
-//    }
-//    
-//    if (self.selectedIndex == 0 && direction == UICollectionViewOrientationMaskRight) {
-//        NSLog(@"111111111");
-//        return;
-//    }
-//    
-//    if (self.selectedIndex == (self.viewControllers.count - 1) && direction == UICollectionViewOrientationMaskLeft) {
-//        NSLog(@"222222222");
-//        return;
-//    }
-//
-//    NSLog(@"jslfjslfjsdflsdfjsdlfsjfl");
-    
-//    NSLog(@"1    %f,%f", [change[NSKeyValueChangeNewKey] CGPointValue].x, [change[NSKeyValueChangeOldKey] CGPointValue].x);
-//    
-//    
-//    NSLog(@"2    %f, %f", self.collectionView.contentSize.width, self.collectionView.contentOffset.x);
-//    
-//    if (self.selectedIndex == 0 && self.collectionView.contentOffset.x < 0) {
-//        return;
-//    }
-//    
-//    //    if (self.selectedIndex == 0 || self.selectedIndex == (self.viewControllers.count - 1)) {
-//    //        return;
-//    //    }
-//    
-////    CGFloat offsetX = scrollView.contentOffset.x;
-//    CGFloat flag = (self.segmentBar.frame.size.width - self.collectionView.contentOffset.x)/self.segmentBar.frame.size.width - self.selectedIndex;
-//    
-//    NSLog(@"3    %f, %f", self.collectionView.contentOffset.x, flag);
-    
-    
-    
-    //    float n=12.223;
-    //    int x=(int)n;
-    //    float y=n-(float)x;
-    
-    
-    
-    //    NSLog(@"%@", NSStringFromCGPoint(scrollView.contentOffset));
-    //    NSLog(@"%@", NSStringFromCGPoint(self.segmentBar.contentOffset));
-    
-    //    float minX = 45.0;
-    //    float mid  = [UIScreen mainScreen].bounds.size.width/2 - minX;
-    //    float midM = [UIScreen mainScreen].bounds.size.width - minX;
-    //    for(UIImageView *v in subviews){
-    //        UIColor *c = gray;
-    //        if(v.frame.origin.x > minX
-    //           && v.frame.origin.x < mid)
-    //            // Left part
-    //            c = [self gradient:v.frame.origin.x
-    //                              top:minX+1
-    //                           bottom:mid-1];
-    //        else if(v.frame.origin.x > mid
-    //                && v.frame.origin.x < midM)
-    //            // Right part
-    //            c = [self gradient:v.frame.origin.x
-    //                              top:mid+1
-    //                           bottom:midM-1];
-    //        else if(v.frame.origin.x == mid)
-    //            c = orange;
-    //        v.tintColor= c;
-    //    }
-}
-
 #pragma mark - UICollectionViewDelegate & UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -255,27 +171,6 @@ static NSString * const reuseIdentifier = @"contentCellId";
 }
 
 #pragma mark - UIScrollViewDelegate
-
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-//{
-//
-//}
-
-- (UIColor *)gradient:(double)percent top:(double)topX bottom:(double)bottomX
-{
-    double t = (percent - bottomX) / (topX - bottomX);
-    
-    t = MAX(0.0, MIN(t, 1.0));
-    
-    const CGFloat *cgInit = CGColorGetComponents(self.segmentBar.tintColor.CGColor);
-    const CGFloat *cgGoal = CGColorGetComponents(self.segmentBar.selectedTintColor.CGColor);
-    
-    double r = cgInit[0] + t * (cgGoal[0] - cgInit[0]);
-    double g = cgInit[1] + t * (cgGoal[1] - cgInit[1]);
-    double b = cgInit[2] + t * (cgGoal[2] - cgInit[2]);
-    
-    return [UIColor colorWithRed:r green:g blue:b alpha:1];
-}
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {

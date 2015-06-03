@@ -5,9 +5,9 @@
 [![License](https://img.shields.io/cocoapods/l/JCSegmentBarController.svg?style=flat)](http://cocoapods.org/pods/JCSegmentBarController)
 [![Platform](https://img.shields.io/cocoapods/p/JCSegmentBarController.svg?style=flat)](http://cocoapods.org/pods/JCSegmentBarController)
 
-A short description of JCSegmentBarController.
+Simple to use and support horizontally-scrolling.
 
-<img width="320" src="./ScreenShot.png"> 
+<img width="320" src="./ScreenShot.gif"> 
 
 ## Installation
 
